@@ -1,0 +1,15 @@
+# openssl
+
+- read site cert
+`openssl s_client -showcerts -servername www.example.com -connect www.example.com:443 </dev/null`
+
+- self-signed certificate
+`openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365`
+
+- self-signed certificate with altName
+`openssl req -new -subj "/C=IR/CN=csm.crk.lab.emc.com" \
+                  -addext "subjectAltName = DNS.1:grpc.csm.crk.lab.emc.com" \
+                  -newkey rsa:2048 -keyout key.pem -out req.pem`
+
+- decode certificate
+`openssl x509 -in certificate.crt -text -noout`

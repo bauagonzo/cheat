@@ -1,0 +1,5 @@
+# yum
+
+- Install precise package
+`yum --showduplicates list {package}} | expand`
+`yum install {{package}}-{{version info}}`

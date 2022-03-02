@@ -1,0 +1,20 @@
+# Test connectivity
+`iscsiadm --mode discovery --type sendtargets --portal <ip address>:<port number>`
+
+# Kill an ISCSI session:
+`iscsiadm -m node -T <iqn> -p <ip address>:<port number> -u`
+
+# Prevent the session from re-establishing, you may wish to remove the node:
+`iscsiadm -m node -o delete -T <iqn>`
+
+# Make sure the session is no longer listed:
+`iscsiadm -m session`
+
+# If required, you can also delete the targets from the ISCSI discovery database entirely.
+`iscsiadm -m discoverydb -t sendtargets -p <IP>:<port> -o delete`
+`ls /var/lib/iscsi/nodes/<iqn>`
+
+`iscsiadm -m session --rescan`
+
+# Manually rescan SCSI Bus
+`echo "- - -" > /sys/class/scsi_host/hostX/scan`

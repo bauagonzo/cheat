@@ -1,0 +1,17 @@
+- Copy repo without .git nor filetype
+`rsync -av -e ssh --exclude='*.go' --exclude='.git' /path/to/source/ user@hostB:/path/to/dest/`
+
+- [Sync forked repo](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/syncing-a-fork)
+```
+git fetch upstream
+git checkout main
+git merge upstream/main
+```
+
+- Merge all commit from branch
+```
+git checkout yourBranch
+git reset $(git merge-base master $(git branch --show-current))
+git add -A
+git commit -m "one commit on yourBranch
+```

@@ -1,0 +1,5 @@
+- Force deletion PVC
+`kubectl patch pvc {{PVC_NAME}} -p '{"metadata":{"finalizers":null}}'`
+
+- Decode secret live 
+`kubectl get secret -n {{ns}} {{secret}} --template={{.data.config}}  | base64 -d`
