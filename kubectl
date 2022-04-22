@@ -3,3 +3,9 @@
 
 - Decode secret live 
 `kubectl get secret -n {{ns}} {{secret}} --template={{.data.config}}  | base64 -d`
+
+- Forward service
+`kubectl port-forward --address 0.0.0.0 svc/{{ service }} {{ port }}`
+
+- See Service Account & Role mapping
+`kubectl get rolebindings,clusterrolebindings -A -o custom-columns='KIND:kind,NAMESPACE:metadata.namespace,NAME:metadata.name,SERVICE_ACCOUNTS:subjects[?(@.kind=="ServiceAccount")].name'`

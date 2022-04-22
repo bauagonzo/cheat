@@ -16,5 +16,8 @@
 
 `iscsiadm -m session --rescan`
 
-# Manually rescan SCSI Bus
+# Manually rescan SCSI Bus to detect new disk
 `echo "- - -" > /sys/class/scsi_host/hostX/scan`
+
+# Rescan disk to resize
+`echo "1" > /sys/class/block/sdX/device/rescan`
