@@ -1,0 +1,21 @@
+Here are the steps to try a specific test case :
+1. Download the test suite for your Kubernetes version
+`curl --location https://dl.k8s.io/v1.20.2/kubernetes-test-linux-amd64.tar.gz | tar --strip-components=3 -zxf - kubernetes/test/bin/e2e.test kubernetes/test/bin/ginkgo`
+
+2. Prepare a config file to point to your driver :
+```yaml
+cat >test-driver.yaml <<EOF
+StorageClass:
+  FromExistingClassName: powerstore-xfs
+DriverInfo:
+  Name: csi-powerstore.dellemc.com
+  Capabilities:
+    block: true
+    controllerExpansion: true
+    exec: true
+    multipods: true
+    persistence: true
+    pvcDataSource: true
+EOF
+```
+3. Run the test suite the tests you want : `./e2e.test -kubeconfig ~/.kube/config -ginkgo.v -ginkgo.focus='External.Storage.*Verify if offline PVC expansion works.*' -storage.testdriver=test-driver.yaml`
