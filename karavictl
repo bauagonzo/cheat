@@ -1,0 +1,2 @@
+- Modify image registry in `/var/lib/rancher/k3s/server/manifests` ;
+  they persist after reboots cf.: https://rancher.com/docs/k3s/latest/en/advanced/#auto-deploying-manifests
