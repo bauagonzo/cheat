@@ -1,3 +1,9 @@
+- Install
+`curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"`
+
+- Remove control-plane noSchedule
+`kubectl taint nodes $(kubectl get nodes --selector=node-role.kubernetes.io/master | awk 'FNR==2{print $1}') node-role.kubernetes.io/master-`
+
 - Force deletion PVC
 `kubectl patch pvc {{PVC_NAME}} -p '{"metadata":{"finalizers":null}}'`
 
@@ -9,3 +15,39 @@
 
 - See Service Account & Role mapping
 `kubectl get rolebindings,clusterrolebindings -A -o custom-columns='KIND:kind,NAMESPACE:metadata.namespace,NAME:metadata.name,SERVICE_ACCOUNTS:subjects[?(@.kind=="ServiceAccount")].name'`
+
+- All logs for containers of a Pod
+`kubectl get pods -n powermax -l name=powermax-controller -o jsonpath='{range .items[*]}{@.metadata.name}{" "}{@.spec.containers[*].name}{"\n"}{end}' | awk '{ for (i = 2; i <= NF; i++)  print "kubectl logs -n powermax -c " $1" " $i " > "$i".log"  }'`
+
+- DNS utils
+`kubectl apply -f https://k8s.io/examples/admin/dns/dnsutils.yaml`
+
+- Proxy Access
+```
+cat <<EOF |  kubectl apply -f -
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: tobs-grafana-http-web-anonymous
+rules:
+- apiGroups: [""]
+  resources: ["services/proxy"]
+  resourceNames: ["tobs-grafana:http-web"]
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+- nonResourceURLs: ["/ui", "/ui/*", "/api/v1/namespaces/default/services/tobs-grafana:http-web/proxy/*"]
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: tobs-grafana-http-web-anonymous
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: tobs-grafana-http-web-anonymous
+subjects:
+- kind: User
+  name: system:anonymous
+EOF
+echo "Access to: https://ClusterIP:6443/api/v1/namespaces/default/services/tobs-grafana:http-web:/proxy"
+```

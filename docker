@@ -1,0 +1,5 @@
+# docker
+
+- Cross-compile architecture
+
+`docker buildx build -o type=registry -t coulof/fio --platform=linux/amd64,linux/s390x . `

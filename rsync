@@ -1,4 +1,4 @@
 # rsync
 
 - Copy git repo without golang nor .git dir
-`rsync -av -e ssh --exclude='*.go' --exclude='.git' i {{ src }}  {{ host }}:{{ dst }}`
+`rsync -azvP -e ssh --exclude='*.go' --exclude='.git' {{ src }}  {{ host }}:{{ dst }}`

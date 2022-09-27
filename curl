@@ -13,3 +13,17 @@ starttransfer:  %{time_starttransfer}s\n\
 -------------------------\n\
         total:  %{time_total}s\n" {{http://example.com}}
 ```
+
+- send email
+curl smtp://localhost:1025 --mail-from myself@example.com --mail-rcpt \
+       receiver@example.com --upload-file email.txt
+
+```
+From: John Smith <john@example.com>
+To: Joe Smith <smith@example.com>
+Subject: an example.com example email
+Date: Fri Sep  9 06:12:02 AM EDT 2022
+
+Dear Joe,
+Welcome to this example email. What a lovely day.
+```

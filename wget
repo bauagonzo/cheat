@@ -1,0 +1,4 @@
+# wget
+- Ignore SSL checks
+
+`wget --no-check-certificate {{ URL }}`

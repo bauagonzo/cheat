@@ -1,0 +1,4 @@
+# ssh
+- Force password authentication
+
+`ssh -o PreferredAuthentications=password -o PubkeyAuthentication=no {{ hostname }}`

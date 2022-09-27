@@ -1,0 +1,5 @@
+# rclone
+- SCP with progress bar and config-less
+
+`rclone copy --progress --sftp-user root --sftp-pass $(rclone obscure dangerous) --sftp-host enttme1220.hop.lab.emc.com /usr/bin/rclone :sftp:/tmp/`
+
