@@ -51,3 +51,6 @@ subjects:
 EOF
 echo "Access to: https://ClusterIP:6443/api/v1/namespaces/default/services/tobs-grafana:http-web:/proxy"
 ```
+
+- Running Pod & Image
+`kubectl get pods -n flux-system -o jsonpath='{range .items[*]}{@.metadata.name}{" "}{@..containers[*].image}{" "}{@.status.phase}{" "}{@..startTime}{"\n"}{end}' | column -t`

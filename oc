@@ -1,0 +1,45 @@
+- Approve all CSR certificates
+`oc get csr -o go-template='{{range .items}}{{if not .status}}{{.metadata.name}}{{"\n"}}{{end}}{{end}}' | xargs oc adm certificate approve`
+
+- Access kube from CoreOS Node
+oc get secrets -n kube-system kubeadmin -o json --kubeconfig=/etc/kubernetes/static-pod-resources/kube-apiserver-certs/secrets/node-kubeconfigs/lb-int.kubeconfig | jq -r '.data.kubeadmin' | base64 -d
+
+- nmstate for OCP installation on baremetal
+```yaml
+# eno1 bb:bb:bb:bb:bb:de 10.X.X.34/24   10000 Mbps
+# eno2 bb:bb:bb:bb:bb:df 10.X.X.247/24    10000 Mbps
+# eno3 bb:bb:bb:bb:bb:dc 10.X.X.254/24    1000 Mbps
+# eno4 bb:bb:bb:bb:bb:dd     N/A
+---
+dns-resolver:
+  config:
+    server:
+      - 10.X.Y.110
+      - 10.Z.Z.108
+    search:
+      - crk.lab.emc.com
+routes:
+  config:
+    - destination: 0.0.0.0/0
+      next-hop-interface: eno1
+      next-hop-address: 10.X.X.1
+interfaces:
+  - name: eno1
+    type: ethernet
+    description: Main-NIC
+    state: up
+    ipv4:
+      enabled: true
+      dhcp: false
+      address:
+        - ip: 10.X.X.34
+          prefix-length: 24
+    ipv6:
+      enabled: false
+  - name: eno2
+    type: ethernet
+    state: down
+  - name: eno3
+    type: ethernet
+    state: down
+```
