@@ -1,0 +1,2 @@
+# Verify if `ServiceMonitor` has been kept
+oc get secret -n openshift-user-workload-monitoring prometheus-user-workload -ojson | jq -r '.data["prometheus.yaml.gz"]' | base64 -d | gunzip

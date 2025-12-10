@@ -52,5 +52,31 @@ EOF
 echo "Access to: https://ClusterIP:6443/api/v1/namespaces/default/services/tobs-grafana:http-web:/proxy"
 ```
 
+- k8s e2e storage test
+`curl --location https://dl.k8s.io//$(curl -L -s https://dl.k8s.io/release/stable.txt)/kubernetes-test-linux-amd64.tar.gz | tar --strip-components=3 -zxf - kubernetes/test/bin/e2e.test kubernetes/test/bin/ginkgo`
+
+
+```
+cat >test-driver.yaml <<EOF
+StorageClass:
+  FromExistingClassName: powerstore-xfs
+DriverInfo:
+  Name: csi-powerstore.dellemc.com
+  Capabilities:
+    block: true
+    controllerExpansion: true
+    exec: true
+    multipods: true
+    persistence: true
+    pvcDataSource: true
+EOF
+```
+
+```
+./e2e.test -kubeconfig ~/.kube/config -ginkgo.v -ginkgo.focus='External.Storage.*Verify if offline PVC expansion works.*' -storage.testdriver=test-driver.yaml
+```
 - Running Pod & Image
 `kubectl get pods -n flux-system -o jsonpath='{range .items[*]}{@.metadata.name}{" "}{@..containers[*].image}{" "}{@.status.phase}{" "}{@..startTime}{"\n"}{end}' | column -t`
+
+- Default StorageClass
+`kubectl patch storageclass powermax -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'`

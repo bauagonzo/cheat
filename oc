@@ -43,3 +43,9 @@ interfaces:
     type: ethernet
     state: down
 ```
+
+- Debug node
+`oc debug node/[node-name]`
+
+- 5char-5char-5char-5char
+`oc patch -n kube-system secret/kubeadmin --patch '{"data": {"kubeadmin": "JDJ5JDEwJFgxWFZ3QWR3Q2h3Skt3Q0hZRDhpbnU2VzRkUXZkRnJKcGhIZndVaHlwcVl3VXZpRi9aUEVl"}}'`
