@@ -1,0 +1,58 @@
+---
+syntax: bash
+tags: [ time, date, timezone ]
+---
+# gdate = GNU date (macOS: brew install coreutils). TZ in front = OUTPUT zone.
+# Inner `date -d 'TZ="..." <time>'` = INPUT zone for the parsed string.
+
+# Now, local:
+gdate
+
+# Now, UTC:
+gdate -u
+
+# Now, in a zone:
+TZ='Asia/Dubai' gdate '+%H:%M %Z'
+
+# Convert a time from one zone to another (Paris time at 5pm Dubai):
+TZ='Europe/Paris' gdate -d 'TZ="Asia/Dubai" 5pm'
+
+# Same, but shown in YOUR local zone (omit the leading TZ):
+gdate -d 'TZ="Asia/Dubai" 5pm'
+
+# 9am next Friday in NY, shown in Paris:
+TZ='Europe/Paris' gdate -d 'TZ="America/New_York" 9am next Fri' '+%a %d %b %H:%M %Z'
+
+# Relative times:
+gdate -d 'tomorrow'
+gdate -d '+3 hours'
+gdate -d '-90 minutes'
+gdate -d 'next Friday'
+gdate -d '2 weeks ago'
+
+# Epoch -> human (in a zone):
+TZ='Asia/Tokyo' gdate -d @1700000000
+
+# Human -> epoch (parsed in a zone):
+gdate -d 'TZ="Asia/Dubai" 2026-06-02 17:00' +%s
+
+# Machine-readable formats:
+gdate -u '+%FT%TZ'              # 2026-06-02T08:19:44Z  (UTC)
+gdate --iso-8601=seconds        # ...+02:00
+gdate --rfc-3339=seconds
+gdate -R                        # RFC 2822 (email)
+
+# Find a zone name (IANA Area/City):
+ls /usr/share/zoneinfo/Asia | grep -i dubai
+gdate -d 'tomorrow' --debug     # shows how the input string was parsed
+
+# Inspect a zone's offsets / DST transitions:
+zdump -v Europe/Paris | grep 2026
+
+# Format tokens: %Y year %m month %d day %F=Y-m-d | %H 24h %I 12h %M min %S sec
+#                %p AM/PM %T=H:M:S | %a Mon %A Monday %b Jun %B June
+#                %Z zone(CEST) %z offset(+0200) %s epoch %j day-of-year
+
+# Gotchas: quote the -d string so inner TZ="..." keeps its quotes.
+#          Use zone NAMES not offsets so DST is handled (Europe/Paris -> CET|CEST).
+#          BSD date -d means "DST flag", not a date string -> always gdate on macOS.
